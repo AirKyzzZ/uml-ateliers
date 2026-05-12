@@ -1,0 +1,107 @@
+@startuml recharger_vehicule
+title Atelier 2 - Diagramme d'activité : Recharger son véhicule
+
+skinparam shadowing false
+skinparam activity {
+  BackgroundColor White
+  BorderColor Black
+  DiamondBackgroundColor White
+  DiamondBorderColor Black
+  BarColor Black
+}
+
+|Conducteur|
+start
+:Arriver à la station;
+:Consulter les bornes disponibles;
+:Choisir une borne libre;
+
+|Borne|
+:Afficher l'état disponible;
+
+|Conducteur|
+:Brancher le véhicule;
+:Demander le démarrage de la recharge;
+
+if (Type de client ?) then (Inscrit)
+  :Présenter le badge\nou s'identifier via l'application;
+
+  |Hub central / Station|
+  :Contrôler l'identité du client;
+
+  |Maison mère|
+  :Vérifier le compte client\net les droits de recharge;
+
+else (Anonyme)
+  |Conducteur|
+  :Présenter la carte bancaire;
+
+  |Borne|
+  :Lire le moyen de paiement;
+
+  |Service de paiement|
+  :Préautoriser le paiement;
+endif
+
+|Hub central / Station|
+if (Autorisation accordée ?) then (Oui)
+  :Réserver la borne\npour la session;
+else (Non)
+  |Borne|
+  :Afficher le refus\nd'autorisation;
+
+  |Conducteur|
+  :Débrancher le véhicule;
+  stop
+endif
+
+|Borne|
+:Verrouiller le câble;
+:Démarrer l'alimentation électrique;
+
+fork
+  |Borne|
+  :Mesurer l'énergie délivrée;
+  :Surveiller l'état de la prise\net du véhicule;
+fork again
+  |Hub central / Station|
+  :Suivre la session de recharge;
+  :Actualiser les informations\nde disponibilité;
+fork again
+  |Conducteur|
+  :Suivre l'avancement\nsur la borne ou l'application;
+end fork
+
+|Conducteur|
+if (Fin de recharge ?) then (Arrêt demandé)
+  :Demander l'arrêt de la recharge;
+else (Batterie chargée)
+  :Constater la fin de recharge;
+endif
+
+|Borne|
+:Arrêter l'alimentation électrique;
+:Déverrouiller le câble;
+
+|Hub central / Station|
+:Calculer la durée,\nl'énergie consommée et le montant;
+
+if (Type de client ?) then (Inscrit)
+  |Maison mère|
+  :Enregistrer la session\npour facturation client;
+else (Anonyme)
+  |Service de paiement|
+  :Capturer le paiement final;
+endif
+
+|Hub central / Station|
+:Clôturer la session;
+
+|Borne|
+:Afficher le récapitulatif;
+
+|Conducteur|
+:Débrancher le véhicule;
+:Quitter la station;
+stop
+@enduml
