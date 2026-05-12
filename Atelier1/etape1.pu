@@ -1,0 +1,38 @@
+@startuml etape1
+title Étape 1 - Services client
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam actorStyle awesome
+
+actor "Conducteur inscrit\n(badge / app)" as ClientInscrit
+actor "Conducteur anonyme\n(CB)" as ClientAnonyme
+actor "Visiteur" as Tiers
+
+rectangle "Station de recharge électrique" {
+  usecase "Consulter les bornes\net capacités disponibles" as UCInfo
+  usecase "Démarrer une recharge" as UCDemarrer
+  usecase "Arrêter une recharge" as UCAreter
+  usecase "Payer une recharge directe" as UCPayer
+  usecase "Identifier / autoriser\nle client" as UCIdentifier
+}
+
+actor "Maison mère\n(inscriptions, facturation)" as MaisonMere
+actor "Service de paiement" as Paiement
+actor "API publique\nstation" as APIPublique
+
+ClientInscrit -- UCDemarrer
+ClientInscrit -- UCAreter
+ClientAnonyme -- UCDemarrer
+ClientAnonyme -- UCAreter
+ClientAnonyme -- UCPayer
+Tiers -- UCInfo
+
+UCDemarrer .. UCIdentifier : <<include>>
+UCAreter .. UCIdentifier : <<include>>
+UCPayer .. UCIdentifier : <<include>>
+
+UCIdentifier -- MaisonMere
+UCPayer -- Paiement
+UCInfo -- APIPublique
+@enduml

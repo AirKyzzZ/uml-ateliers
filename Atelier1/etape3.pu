@@ -1,0 +1,90 @@
+@startuml etape3_clients
+title Étape 3 - Services client avec délestage
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam actorStyle awesome
+
+actor "Conducteur inscrit\n(badge / app)" as ClientInscrit
+actor "Conducteur anonyme\n(CB)" as ClientAnonyme
+actor "Service numérique tiers" as Tiers
+actor "Gestionnaire du\nréseau électrique" as Gestionnaire
+
+rectangle "Station de recharge électrique" {
+  usecase "Consulter les bornes\net capacités disponibles" as UCInfo
+  usecase "Démarrer une recharge" as UCDemarrer
+  usecase "Arrêter une recharge" as UCAreter
+  usecase "Payer une recharge directe" as UCPayer
+  usecase "Identifier / autoriser\nle client" as UCIdentifier
+  usecase "Limiter la puissance\nde la station" as UCDelestage
+  usecase "Adapter la puissance\ndisponible par borne" as UCAdapter
+}
+
+actor "Maison mère\n(inscriptions, facturation)" as MaisonMere
+actor "Service de paiement" as Paiement
+actor "API publique\nstation" as APIPublique
+
+ClientInscrit -- UCDemarrer
+ClientInscrit -- UCAreter
+ClientAnonyme -- UCDemarrer
+ClientAnonyme -- UCAreter
+ClientAnonyme -- UCPayer
+Tiers -- UCInfo
+Gestionnaire -- UCDelestage
+
+UCDemarrer .. UCIdentifier : <<include>>
+UCAreter .. UCIdentifier : <<include>>
+UCPayer .. UCIdentifier : <<include>>
+UCDelestage .. UCAdapter : <<include>>
+
+UCIdentifier -- MaisonMere
+UCPayer -- Paiement
+UCInfo -- APIPublique
+UCAdapter -- APIPublique
+@enduml
+
+@startuml etape3_admin
+title Étape 3 - Administration et maintenance avec délestage
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam actorStyle awesome
+
+actor "Opérateur de maintenance" as Operateur
+actor "Superviseur réseau" as Superviseur
+actor "Gestionnaire du\nréseau électrique" as Gestionnaire
+
+rectangle "Station de recharge électrique" {
+  usecase "Mettre en service\nune borne" as UCMiseService
+  usecase "Effectuer une maintenance\nsur une borne" as UCMaintenance
+  usecase "Configurer la station\nà distance" as UCConfigurer
+  usecase "Configurer les tarifs" as UCTarifs
+  usecase "Superviser l'état\ndu matériel" as UCSuperviser
+  usecase "Publier données de\nfonctionnement" as UCPublier
+  usecase "Recevoir une consigne\nde délestage" as UCRecevoir
+  usecase "Limiter la puissance\nde la station" as UCDelestage
+}
+
+actor "Hub central" as Hub
+actor "API de supervision" as APISupervision
+actor "Maison mère\n(facturation, reporting)" as MaisonMere
+
+Operateur -- UCMiseService
+Operateur -- UCMaintenance
+Operateur -- UCSuperviser
+Superviseur -- UCConfigurer
+Superviseur -- UCTarifs
+Superviseur -- UCSuperviser
+Gestionnaire -- UCRecevoir
+
+UCTarifs .. UCConfigurer : <<extend>>
+UCRecevoir .. UCDelestage : <<include>>
+UCMiseService -- Hub
+UCMaintenance -- Hub
+UCConfigurer -- Hub
+UCDelestage -- Hub
+UCSuperviser -- APISupervision
+UCPublier -- APISupervision
+UCPublier -- MaisonMere
+UCSuperviser .. UCPublier : <<include>>
+@enduml

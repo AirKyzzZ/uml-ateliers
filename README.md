@@ -1,11 +1,17 @@
-# Atelier 2 UML - Recharger son véhicule
+# Ateliers UML
 
-Ce dépôt contient les sources du diagramme d'activité de l'Atelier 2 : processus « Recharger son véhicule ».
+Ce dépôt contient les sources PlantUML et les exports PNG des ateliers UML.
 
-## Contenu utile
+## Atelier 1
 
-- `Atelier2/recharger_vehicule.pu` : source PlantUML du diagramme d'activité.
-- `Atelier2/recharger_vehicule.png` : export PNG du diagramme pour une lecture directe.
+- `Atelier1/etape1.pu` et `Atelier1/etape1.png` : services client.
+- `Atelier1/etape2.pu` et `Atelier1/etape2.png` : administration et maintenance.
+- `Atelier1/etape3.pu` et les exports PNG associés : délestage.
+- `Atelier1/rendu.tex` : wrapper LaTeX du rendu.
+
+## Atelier 2
+
+- `Atelier2/recharger_vehicule.pu` et `Atelier2/recharger_vehicule.png` : diagramme d'activité du processus « Recharger son véhicule ».
 - `Atelier2/schema_final.tex` : wrapper LaTeX minimal pour générer le PDF du schéma final.
 - `Atelier2/rendu.tex` : wrapper LaTeX avec une page de titre et le schéma.
 

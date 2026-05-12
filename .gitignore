@@ -1,12 +1,10 @@
 .DS_Store
 
-# This repository is scoped to Atelier 2 only.
-Atelier1/
-
 # Generated diagrams and exported deliverables
 *.pdf
 *.png
 *.svg
+!Atelier1/*.png
 !Atelier2/recharger_vehicule.png
 
 # LaTeX build artifacts

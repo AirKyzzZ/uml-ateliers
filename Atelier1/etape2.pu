@@ -1,0 +1,39 @@
+@startuml etape2
+title Étape 2 - Administration et maintenance
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam actorStyle awesome
+
+actor "Opérateur de maintenance" as Operateur
+actor "Superviseur réseau" as Superviseur
+
+rectangle "Station de recharge électrique" {
+  usecase "Mettre en service\nune borne" as UCMiseService
+  usecase "Effectuer une maintenance\nsur une borne" as UCMaintenance
+  usecase "Configurer la station\nà distance" as UCConfigurer
+  usecase "Configurer les tarifs" as UCTarifs
+  usecase "Superviser l'état\ndu matériel" as UCSuperviser
+  usecase "Publier données de\nfonctionnement" as UCPublier
+}
+
+actor "Hub central" as Hub
+actor "API de supervision" as APISupervision
+actor "Maison mère\n(facturation, reporting)" as MaisonMere
+
+Operateur -- UCMiseService
+Operateur -- UCMaintenance
+Operateur -- UCSuperviser
+Superviseur -- UCConfigurer
+Superviseur -- UCTarifs
+Superviseur -- UCSuperviser
+
+UCTarifs .. UCConfigurer : <<extend>>
+UCMiseService -- Hub
+UCMaintenance -- Hub
+UCConfigurer -- Hub
+UCSuperviser -- APISupervision
+UCPublier -- APISupervision
+UCPublier -- MaisonMere
+UCSuperviser .. UCPublier : <<include>>
+@enduml
